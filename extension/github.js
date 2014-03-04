@@ -85,7 +85,7 @@ function getRepos(type, path, fn, force) {
   xhr.onload = function () {
     var res = parseResponse(xhr)
     if (!res) return fn([])
-    var repos = filterIgnored(res).map(function (obj) {
+    var repos = filterIncluded(res).map(function (obj) {
       return {
         owner: obj.full_name.split('/')[0],
         project: obj.full_name.split('/')[1],
@@ -246,11 +246,11 @@ function parseResponse(xhr) {
 }
 
 
-function filterIgnored(list) {
-  var filter = fetch('ignore_repos')
+function filterIncluded(list) {
+  var filter = fetch('include_repos')
   if (!filter) return list
 
-  var ignoreList = filter.split(',').map(function (repo) {
+  var includeList = filter.split(',').map(function (repo) {
     var matcher = repo.trim()
 
     matcher = /* org/foo */ (/\/[^*]+/.test(matcher)) ? escapeRegExp(matcher) :
@@ -261,8 +261,8 @@ function filterIgnored(list) {
   })
 
   return list.filter(function (repo) {
-    return ignoreList.every(function (matcher) {
-      return !matcher.test(repo.full_name)
+    return includeList.every(function (matcher) {
+      return matcher.test(repo.full_name)
     })
   })
 }

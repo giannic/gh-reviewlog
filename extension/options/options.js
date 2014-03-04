@@ -24,7 +24,7 @@ function bindStorage(id) {
 
 bindStorage('refresh_rate')
 bindStorage('alert_words')
-bindStorage('ignore_repos')
+bindStorage('include_repos')
 
 
 document.getElementById('version').innerHTML = chrome.runtime.getManifest().version
