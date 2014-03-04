@@ -215,7 +215,7 @@ function getAllPullRequests(fn, force) {
         allPulls.sort(function (a, b) {
           return b.updatedAt - a.updatedAt
         })
-        console.log(allPulls)
+
         fn({
           repoCount: repoCount,
           pulls: allPulls
@@ -260,11 +260,16 @@ function filterIncluded(list) {
     return new RegExp(matcher)
   })
 
-  return list.filter(function (repo) {
-    return includeList.every(function (matcher) {
-      return matcher.test(repo.full_name)
-    })
-  })
+  var output_list = []
+  for (var idx in list) {
+      var repo = list[idx]
+      for (var matcher in includeList) {
+          if (!!includeList[matcher].test(repo.full_name)) {
+              output_list.push(repo)
+          }
+      }
+  }
+  return output_list
 }
 
 
